@@ -8,5 +8,6 @@ Route::group(['prefix' => 'admin-web'], function () {
     Route::group(['prefix' => 'category'], function () {
         Route::get('/', 'Web\Admin\AdminCategoryController@index')->name('admin.category.index');
         Route::get('create', 'Web\Admin\AdminCategoryController@create')->name('admin.category.create');
+        Route::post('create', 'Web\Admin\AdminCategoryController@store');
     });
 });

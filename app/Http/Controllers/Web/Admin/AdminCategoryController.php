@@ -6,6 +6,7 @@ use App\Contracts\Services\Web\Admin\CategoryServiceInterface;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Web\WebController;
+use App\Http\Requests\Web\Category\AdminCategoryRequest;
 
 class AdminCategoryController extends WebController
 {
@@ -28,8 +29,23 @@ class AdminCategoryController extends WebController
     public function create()
     {
         return $this->getData(function () {
-            $data = [];
+            $data = $this->categoryService->create();
             return view('admin.category.create', $data);
+        });
+    }
+
+    public function store(AdminCategoryRequest $request)
+    {
+        $params = $request->only('c_name', 'c_parent_id');
+        return $this->doRequest(function () use ($params, $request) {
+            $data = $this->categoryService->store($params, $request);
+            if ($data) {
+                $request->session()->flash('toastr', [
+                    'type'      => 'success',
+                    'message'   => 'Success !'
+                ]);
+                return redirect()->back();
+            }
         });
     }
 }
